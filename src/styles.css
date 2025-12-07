@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Project base variables + basic utilities (copied from the built output) */
+:root{--bg:#f2f4f5;--panel:#f7f9fa;--card:#ffffff;--accent:#2b7a39;--accent-600:#25633b;--muted:#9aa3a7;--ink:#0f172a;--shadow: 0 8px 28px rgba(12,18,20,.08)}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,system-ui,Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
+
+/* Small set of global components used throughout the demo pages */
+.page .hero{background:linear-gradient(90deg,#fbfffb,#fff);padding:36px;border-radius:12px;margin-bottom:18px;border:1px solid rgba(10,10,10,.02)}
+.grid.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+.btn{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid transparent;text-decoration:none;background:transparent;color:var(--accent);cursor:pointer;font-weight:600}
+.btn.primary{background:var(--accent);color:#fff}
+.muted{color:var(--muted)}
+.breadcrumb{color:var(--muted);font-size:14px;margin-bottom:12px}
+.panel{background:var(--panel);padding:16px;border-radius:12px;border:1px solid rgba(12,18,20,.03)}
+.tabs{display:flex;gap:8px;background:var(--panel);padding:8px;border-radius:12px;margin-bottom:16px}
+.tab{padding:10px 18px;border-radius:999px;color:var(--muted);cursor:pointer}
+.tab.active{background:var(--card);color:var(--accent-600);box-shadow:var(--shadow)}
+
+/* Layout helpers */
+.panel-grid{display:flex;min-height:100vh}
+.sidebar{width:250px;padding:22px 18px;background:#fff;display:flex;flex-direction:column;gap:12px;border-radius:0 40px 0 0;box-shadow:5px 20px 14px #2e37a40d;color:var(--ink)}
+.content-wrap{padding-top:18px}
+
+/* Modal helper */
+.modal-overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:#02060a73;display:flex;align-items:center;justify-content:center;z-index:120}
+.modal{background:var(--card);padding:18px;border-radius:16px;min-width:520px;box-shadow:var(--shadow)}
+
+/* Keep future custom styles here */

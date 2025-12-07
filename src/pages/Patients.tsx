@@ -1,0 +1,12 @@
+import React from 'react';
+
+const Patients: React.FC = () => {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">Patients</h1>
+      <p className="mt-4 text-sm text-slate-600">This is the Patients page — placeholder content.</p>
+    </div>
+  );
+}
+
+export default Patients;
