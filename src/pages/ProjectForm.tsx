@@ -5,8 +5,9 @@ const ProjectForm: React.FC = () => {
   const nav = useNavigate()
 
   return (
-    <div className="page project-form">
-      <section className="section">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 page project-form">
+        <section className="section">
         <div className="header-row">
           <div>
             <h2>New Project</h2>
@@ -23,7 +24,8 @@ const ProjectForm: React.FC = () => {
           <label>Description<br /><textarea name="desc" /></label>
           <label>Owner<br /><input name="owner" /></label>
         </form>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }

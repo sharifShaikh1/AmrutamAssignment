@@ -15,29 +15,42 @@ import {
 const Dashboard: React.FC = () => {
 
   return (
-    <div className="flex h-full bg-[#F8F9FA] font-sans text-slate-800 flex-1">
+    <div className="flex min-h-screen bg-[#F8F9FA] font-sans text-slate-800 flex-1">
       {/* Dashboard Content */}
       <main className="flex-1 overflow-y-auto p-6 lg:p-8">
           
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-slate-500 mb-6">
-            <span>Affiliate</span>
-            <ChevronRight size={16} />
-            <span className="text-[#3A643B] font-medium">Dashboard</span>
+          {/* Breadcrumb - compact on small screens */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-sm text-slate-500 mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">Affiliate</span>
+              <ChevronRight size={14} />
+              <span className="text-[#3A643B] font-medium">Dashboard</span>
+            </div>
+            <div className="mt-2 sm:mt-0 ml-0 sm:ml-4 text-xs text-slate-500">Month summary & key metrics</div>
           </div>
 
           {/* Time Filter Tabs */}
-          <div className="bg-white rounded-lg border-2 border-blue-400 p-0 mb-8 overflow-hidden shadow-sm max-w-4xl mx-auto lg:mx-0">
-             <div className="grid grid-cols-4 divide-x divide-slate-100">
-               <TabButton label="Today So Far" />
-               <TabButton label="Week So Far" />
-               <TabButton label="Month So Far" active />
-               <TabButton label="Custom" />
-             </div>
+          {/* Time filter tabs — show horizontal tabs on md+, compact select on small */}
+          <div className="bg-white rounded-lg border-2 border-blue-400 p-0 mb-6 overflow-hidden shadow-sm max-w-4xl mx-auto lg:mx-0 w-full">
+            <div className="hidden md:grid grid-cols-4 divide-x divide-slate-100">
+              <TabButton label="Today So Far" />
+              <TabButton label="Week So Far" />
+              <TabButton label="Month So Far" active />
+              <TabButton label="Custom" />
+            </div>
+            <div className="md:hidden p-3 flex items-center justify-between gap-2">
+              <select className="w-full rounded-xl border border-slate-100 p-2 text-sm text-slate-700 bg-white">
+                <option>Month So Far</option>
+                <option>Today So Far</option>
+                <option>Week So Far</option>
+                <option>Custom</option>
+              </select>
+              <button className="ml-3 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600">Filter</button>
+            </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 px-1">
             <StatCard 
               title="Total Coupons clicks" 
               value="255" 
@@ -65,12 +78,12 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Bottom Section: Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative">
             
             {/* Top Affiliate Doctors */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
               <h3 className="text-lg font-bold text-slate-900 mb-6">Top Affiliate Doctors</h3>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <DoctorRow 
                   rank={1} 
                   name="Dr. Meenal" 
@@ -99,11 +112,11 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Top Affiliate Products */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 relative">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6 relative">
               
               <h3 className="text-lg font-bold text-slate-900 mb-6">Top Affiliate Products</h3>
               <div className="space-y-6">
-                <ProductRow 
+                 <ProductRow 
                    rank={1}
                    name="Amrutam Nari Sondarya Malt"
                    img="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
@@ -136,8 +149,7 @@ interface TabButtonProps {
 }
 
 const TabButton: React.FC<TabButtonProps> = ({ label, active }) => (
-  <button className={`py-4 text-center text-sm font-medium transition-colors relative hover:bg-slate-50
-    ${active ? 'text-[#3A643B]' : 'text-slate-400'}`}>
+  <button className={`py-3 text-center text-sm font-medium transition-colors relative hover:bg-slate-50 px-3 flex items-center justify-center ${active ? 'text-[#3A643B]' : 'text-slate-400'}`}>
     {label}
     {active && <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-[#3A643B] rounded-t-full"></div>}
   </button>
@@ -151,7 +163,7 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, suffix, icon }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-40">
+  <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-36 sm:h-40">
     <div className="text-slate-600 font-medium text-sm mb-2">{title}</div>
     <div className="flex items-end justify-between">
       <div className="flex items-baseline gap-1">
@@ -175,16 +187,16 @@ interface DoctorRowProps {
 }
 
 const DoctorRow: React.FC<DoctorRowProps> = ({ rank, name, specialty, img, trend, trendColor }) => (
-  <div className="flex items-center justify-between group cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-colors">
-    <div className="flex items-center gap-4">
+  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between group cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-colors gap-3 sm:gap-0">
+    <div className="flex items-center gap-3 sm:gap-4 w-full">
       <span className="text-slate-400 font-medium w-4">{rank}.</span>
-      <img src={img} alt={name} className="w-12 h-12 rounded-full object-cover" />
+      <img src={img} alt={name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover" />
       <div>
         <div className="font-bold text-slate-900">{name}</div>
         <div className="text-xs text-slate-500">{specialty}</div>
       </div>
     </div>
-    <div className={`px-2 py-1 rounded-md text-xs font-bold ${trendColor}`}>
+    <div className={`px-2 py-1 rounded-md text-xs font-bold ${trendColor} self-end sm:self-auto`}> 
       {trend}
     </div>
   </div>
@@ -197,10 +209,10 @@ interface ProductRowProps {
 }
 
 const ProductRow: React.FC<ProductRowProps> = ({ rank, name, img }) => (
-  <div className="flex items-center justify-between group cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-colors">
+  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between group cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-colors gap-3 sm:gap-0">
     <div className="flex items-center gap-4">
       <span className="text-slate-400 font-medium w-4">{rank}.</span>
-      <div className="w-12 h-12 rounded-full bg-orange-100 overflow-hidden flex-shrink-0">
+      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-100 overflow-hidden flex-shrink-0">
         <img src={img} alt={name} className="w-full h-full object-cover mix-blend-multiply" />
       </div>
       <div className="font-bold text-slate-900 text-sm">{name}</div>

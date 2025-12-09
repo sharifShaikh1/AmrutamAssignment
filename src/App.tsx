@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 
 import Projects from './pages/Projects'
@@ -11,7 +11,6 @@ import Activity from './pages/Activity'
 import Settings from './pages/Settings'
 import Reports from './pages/Reports'
 import Dashboard from './pages/Dashboard'
-import Home from './pages/Home'
 import { Navigate } from 'react-router-dom'
 import Doctors from './pages/Doctors'
 import Patients from './pages/Patients'
@@ -33,22 +32,32 @@ import ErrorBoundary from './components/ErrorBoundary'
 import './styles.css'
 
 const App: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    // default open on desktop, closed on small screens
+    try {
+      return window.innerWidth >= 768
+    } catch (e) {
+      return true
+    }
+  });
+
+  useEffect(() => {
+    const onResize = () => setIsSidebarOpen(window.innerWidth >= 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   return (
-    <div className="app-root flex h-screen">
-      <Sidebar isOpen={isSidebarOpen} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+    <div className="app-root flex min-h-screen">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
+        <Topbar isSidebarOpen={isSidebarOpen} onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto p-6 pt-20">
           <ErrorBoundary>
             <Routes>
-          {/* Root should go to affiliate dashboard so users land on the Affiliate dashboard at / */}
           <Route path="/" element={<Navigate to="/affiliate/dashboard" replace />} />
-          {/* Affiliate dashboard is available at /affiliate/dashboard (accessed from Affiliate submenu) */}
           <Route path="/affiliate/dashboard" element={<Dashboard />} />
-          {/* convenience redirect for the affiliate root */}
           <Route path="/affiliate" element={<Navigate to="/affiliate/dashboard" replace />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/new" element={<ProjectForm />} />

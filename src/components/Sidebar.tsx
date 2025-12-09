@@ -14,9 +14,11 @@ import {
   ChevronRight,
   Settings,
 } from 'lucide-react';
+import logo from '../asset/logo.png';
 
 interface SidebarProps {
   isOpen: boolean;
+  onClose?: () => void;
 }
 
 interface NavItemProps {
@@ -41,40 +43,35 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, onClick }) => 
   </button>
 );
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // State for collapsible menus
-  const [affiliateOpen, setAffiliateOpen] = useState(false);
-  const [paymentOpen, setPaymentOpen] = useState(false);
-  const [appOpen, setAppOpen] = useState(false);
-  const [webOpen, setWebOpen] = useState(false);
-  const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
-  // Auto-expand menus based on current active route
+  const toggleMenu = (menu: string) => {
+    setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }));
+  };
+
   useEffect(() => {
     if (location.pathname.startsWith('/payment')) {
-      setPaymentOpen(true);
-      setAffiliateOpen(true);
+      setOpenMenus(prev => ({ ...prev, affiliate: true, payment: true }));
     }
     if (location.pathname.startsWith('/affiliate')) {
-      setAffiliateOpen(true);
+      setOpenMenus(prev => ({ ...prev, affiliate: true }));
     }
     if (location.pathname.startsWith('/customization')) {
-      setCustomizationOpen(true);
+      setOpenMenus(prev => ({ ...prev, customization: true }));
     }
     if (location.pathname.startsWith('/customization/web')) {
-      setWebOpen(true);
+      setOpenMenus(prev => ({ ...prev, web: true, customization: true }));
     }
     if (location.pathname.startsWith('/customization/app')) {
-      setAppOpen(true);
+      setOpenMenus(prev => ({ ...prev, app: true, customization: true }));
     }
   }, [location.pathname]);
 
   const mainMenuItems = [
-    // Top-level "Dashboard" should not map to any route per UX: keep the Dashboard available
-    // via the Affiliate submenu instead. So we no longer include a clickable top-level Dashboard entry.
     { label: 'Doctors', icon: <UserPlus size={20} />, path: '/doctors' },
     { label: 'Patients', icon: <Users size={20} />, path: '/patients' },
     { label: 'Appointments', icon: <Calendar size={20} />, path: '/appointments' },
@@ -90,13 +87,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   };
 
   return (
-    <aside className={`bg-white shadow-sm flex-shrink-0 flex flex-col transition-all duration-300 overflow-hidden ${isOpen ? 'w-64' : 'w-0'}`}>
+    <>
+      {isOpen && (
+        <div
+          onClick={() => onClose && onClose()}
+          className="fixed inset-0 bg-black/40 z-30 md:hidden"
+          aria-hidden
+        />
+      )}
+
+      <aside
+        className={`bg-white shadow-lg flex-shrink-0 flex flex-col transition-transform duration-300 overflow-hidden transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} w-64 fixed left-0 top-0 bottom-0 z-40`}
+      >
+        <div className="flex items-center justify-center h-20 border-b">
+          <img src={logo} alt="Amrutam Logo" className="h-10" /> 
+        </div>
       <div className="flex-1 overflow-y-auto py-6 px-4">
+        <div className="flex items-center justify-end mb-2 md:hidden">
+          <button onClick={() => onClose && onClose()} className="p-2 rounded-full hover:bg-slate-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
         <div className="mb-6">
           <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-4 pl-3">Main</h3>
           <nav className="space-y-1">
-            {/* Top-level label "Dashboard" remains visible but intentionally not clickable.
-                The real dashboard route is under the Affiliate submenu (/affiliate/dashboard). */}
             <NavItem
               key="top-dashboard"
               icon={<LayoutDashboard size={20} />}
@@ -104,7 +118,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               isActive={false}
             />
 
-            {/* Standard Menu Items */}
             {mainMenuItems.map((item) => (
               <NavItem
                 key={item.path}
@@ -115,12 +128,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               />
             ))}
 
-            {/* Affiliate Section */}
             <div className="pt-2">
               <button
-                onClick={() => setAffiliateOpen(!affiliateOpen)}
+                onClick={() => toggleMenu('affiliate')}
                 className={`w-full flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors ${
-                    affiliateOpen ? 'text-[#3A643B] font-medium bg-green-50' : 'text-slate-500 hover:text-[#3A643B] hover:bg-green-50'
+                    openMenus.affiliate ? 'text-[#3A643B] font-medium bg-green-50' : 'text-slate-500 hover:text-[#3A643B] hover:bg-green-50'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -129,12 +141,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   </div>
                   <span>Affiliate</span>
                 </div>
-                <ChevronDown size={16} className={`transition-transform ${affiliateOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown size={16} className={`transition-transform ${openMenus.affiliate ? 'rotate-0' : '-rotate-90'}`} />
               </button>
 
-              {affiliateOpen && (
+              {openMenus.affiliate && (
                 <div className="ml-9 mt-1 space-y-1">
-                  {/* Affiliate > Dashboard */}
                   <button
                     onClick={() => navigate('/affiliate/dashboard')}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
@@ -146,7 +157,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     Dashboard
                   </button>
 
-                  {/* Affiliate > Commission */}
                   <button
                     onClick={() => navigate('/commission')}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
@@ -158,7 +168,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     Commission
                   </button>
 
-                  {/* Affiliate > Coupons */}
                   <button
                     onClick={() => navigate('/coupons')}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
@@ -170,10 +179,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     Coupons
                   </button>
 
-                  {/* Affiliate > Payment (Nested) */}
                   <div>
                     <button
-                      onClick={() => setPaymentOpen(!paymentOpen)}
+                      onClick={() => toggleMenu('payment')}
                       className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
                         location.pathname.startsWith('/payment')
                           ? 'text-[#3A643B] font-medium'
@@ -181,10 +189,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       }`}
                     >
                       <span>Payment</span>
-                      <ChevronDown size={14} className={`transition-transform ${paymentOpen ? 'rotate-0' : '-rotate-90'}`} />
+                      <ChevronDown size={14} className={`transition-transform ${openMenus.payment ? 'rotate-0' : '-rotate-90'}`} />
                     </button>
                     
-                    {paymentOpen && (
+                    {openMenus.payment && (
                       <div className="ml-3 mt-1 space-y-1">
                         <button
                           onClick={() => navigate('/payment/pending')}
@@ -210,7 +218,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     )}
                   </div>
 
-                  {/* Affiliate > Doctors */}
                   <button
                     onClick={() => navigate('/doctors')}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
@@ -225,40 +232,38 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               )}
             </div>
 
-            {/* Customization Section (Moved to Bottom) */}
             <div className="pt-2">
               <button
-                onClick={() => setCustomizationOpen(!customizationOpen)}
+                onClick={() => toggleMenu('customization')}
                 className={`w-full flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors ${
-                    customizationOpen ? 'text-[#3A643B] font-medium bg-green-50' : 'text-slate-500 hover:text-[#3A643B] hover:bg-green-50'
+                    openMenus.customization ? 'text-[#3A643B] font-medium bg-green-50' : 'text-slate-500 hover:text-[#3A643B] hover:bg-green-50'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
-                    {/* Using MessageSquare to match the icon in your screenshot */}
                     <MessageSquare size={20} /> 
                   </div>
                   <span>Customization</span>
                 </div>
-                <ChevronDown size={16} className={`transition-transform ${customizationOpen ? 'rotate-0' : '-rotate-90'}`} />
+                <ChevronDown size={16} className={`transition-transform ${openMenus.customization ? 'rotate-0' : '-rotate-90'}`} />
               </button>
 
-              {customizationOpen && (
+              {openMenus.customization && (
                 <div className="ml-9 mt-1 space-y-1">
                   <div>
                     <button
-                      onClick={() => setWebOpen(!webOpen)}
+                      onClick={() => toggleMenu('web')}
                       className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${
                         isPathActive('/customization/web')
                           ? 'text-[#3A643B] font-medium'
                           : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
                       }`}
                     >
-                      <ChevronDown size={14} className={`transition-transform ${webOpen ? 'rotate-0' : '-rotate-90'}`} />
+                      <ChevronDown size={14} className={`transition-transform ${openMenus.web ? 'rotate-0' : '-rotate-90'}`} />
                       <span>Web</span>
                     </button>
 
-                    {webOpen && (
+                    {openMenus.web && (
                       <div className="ml-3 mt-1 space-y-1">
                         <button
                           onClick={() => navigate('/customization/web')}
@@ -271,7 +276,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                           Overview
                         </button>
 
-                        {/* Web -> FAQ uses its own path so only Web will be highlighted when visited */}
                         <button
                           onClick={() => navigate('/customization/web/faq')}
                           className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors pl-6 ${
@@ -287,18 +291,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   </div>
                   <div>
                     <button
-                      onClick={() => setAppOpen(!appOpen)}
+                      onClick={() => toggleMenu('app')}
                       className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${
                         isPathActive('/customization/app')
                           ? 'text-[#3A643B] font-medium'
                           : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
                       }`}
                     >
-                      <ChevronDown size={14} className={`transition-transform ${appOpen ? 'rotate-0' : '-rotate-90'}`} />
+                      <ChevronDown size={14} className={`transition-transform ${openMenus.app ? 'rotate-0' : '-rotate-90'}`} />
                       <span>App</span>
                     </button>
 
-                    {appOpen && (
+                    {openMenus.app && (
                       <div className="ml-3 mt-1 space-y-1">
                         <button
                           onClick={() => navigate('/customization/app')}
@@ -330,7 +334,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           </nav>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

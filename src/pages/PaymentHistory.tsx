@@ -12,6 +12,12 @@ import {
 export default function PaymentHistoryPage() {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
+  // pagination state (simulated server-side dataset)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const pageSize = 7
+  const totalCount = 80
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
+
   // Toggle Selection Logic
   const toggleSelectAll = () => {
     if (selectedRows.length === mockHistoryData.length) {
@@ -29,15 +35,19 @@ export default function PaymentHistoryPage() {
     }
   };
 
+  const goNext = () => setCurrentPage(p => Math.min(totalPages, p + 1))
+  const goPrev = () => setCurrentPage(p => Math.max(1, p - 1))
+  const goTo = (p: number) => setCurrentPage(() => Math.max(1, Math.min(totalPages, p)))
+
   return (
-    <div className="min-h-screen bg-[#F8F9FA] p-6 lg:p-8 font-sans text-slate-800">
-      <div className="max-w-[1600px] mx-auto">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Card Container */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
           
           {/* Header & Toolbar */}
-          <div className="p-6 border-b border-slate-50 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+          <div className="sticky top-0 z-30 bg-white p-6 border-b border-slate-50 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
             <h2 className="text-xl font-bold text-slate-800 flex-shrink-0">Payment History</h2>
             
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
@@ -62,12 +72,29 @@ export default function PaymentHistoryPage() {
                 <ToolbarButton icon={<Download size={18} />} />
               </div>
             </div>
+            {/* Top pagination - visible on small screens and tablet */}
+            <div className="mt-3 xl:mt-0 flex items-center gap-2 justify-end w-full xl:w-auto">
+              <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">Showing <span className="font-semibold text-slate-700">{(currentPage - 1) * pageSize + 1}</span>-<span className="font-semibold text-slate-700">{Math.min(currentPage * pageSize, totalCount)}</span> of <span className="font-semibold text-slate-700">{totalCount}</span></div>
+              <div className="flex items-center gap-2">
+                <button onClick={goPrev} disabled={currentPage === 1} className="sm:hidden p-2 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50">
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="hidden sm:flex items-center gap-1 rounded-lg bg-white border border-slate-100">
+                  <button onClick={goPrev} disabled={currentPage === 1} className="px-3 py-2 rounded-l-lg text-sm text-slate-600 disabled:opacity-50">Prev</button>
+                  <div className="px-3 text-sm text-slate-700 font-semibold">{currentPage}/{totalPages}</div>
+                  <button onClick={goNext} disabled={currentPage === totalPages} className="px-3 py-2 rounded-r-lg text-sm text-slate-600 disabled:opacity-50">Next</button>
+                </div>
+                <button onClick={goNext} disabled={currentPage === totalPages} className="sm:hidden p-2 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50">
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Table Container */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-white text-slate-800 font-bold border-b border-slate-50 sticky top-0 z-10">
+              <thead className="bg-white text-slate-800 font-bold border-b border-slate-50 sticky top-28 z-20">
                 <tr>
                   <th className="px-6 py-5 w-12">
                     <input 
@@ -135,18 +162,40 @@ export default function PaymentHistoryPage() {
             </table>
           </div>
 
-          {/* Pagination */}
-          <div className="p-6 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-sm font-medium">
-            <div className="text-xs sm:text-sm">Rows per page: 7</div>
-            <div className="flex items-center gap-6">
-              <span className="text-xs sm:text-sm">1-7 of 80</span>
-              <div className="flex items-center gap-2">
-                <button className="p-1 hover:bg-slate-50 rounded text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50">
-                  <ChevronLeft size={18} />
-                </button>
-                <button className="p-1 hover:bg-slate-50 rounded text-slate-400 hover:text-slate-600 transition-colors">
-                  <ChevronRight size={18} />
-                </button>
+          {/* Pagination (small) */}
+          <div className="p-4 sm:p-6 border-t border-slate-50 text-slate-400 text-sm font-medium">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+                <div className="text-xs sm:text-sm">Showing <span className="font-semibold text-slate-700">{(currentPage - 1) * pageSize + 1}</span>-<span className="font-semibold text-slate-700">{Math.min(currentPage * pageSize, totalCount)}</span> of <span className="font-semibold text-slate-700">{totalCount}</span></div>
+                {/* page size / other info for larger screens - hidden on very small */}
+                <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">Per page: <span className="font-semibold text-slate-700">{pageSize}</span></div>
+              </div>
+
+              {/* Desktop / tablet page controls */}
+              <div className="hidden sm:flex items-center gap-2">
+                <button onClick={goPrev} disabled={currentPage === 1} className="px-3 py-2 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50">Prev</button>
+
+                {/* small page list (up to 5 pages visible) */}
+                <div className="flex items-center gap-1 bg-white border border-slate-100 rounded-lg px-1 py-1">
+                  {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+                    const start = Math.max(1, Math.min(currentPage - 2, Math.max(1, totalPages - 4)) )
+                    const page = start + idx
+                    return (
+                      <button key={page} onClick={() => goTo(page)} className={`px-3 py-1 rounded ${page === currentPage ? 'bg-[#E6F6EA] text-[#13431b] font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
+                        {page}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <button onClick={goNext} disabled={currentPage === totalPages} className="px-3 py-2 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50">Next</button>
+              </div>
+
+              {/* Mobile: large easy-to-tap controls */}
+              <div className="sm:hidden w-full flex items-center gap-2 justify-between mt-2">
+                <button onClick={goPrev} disabled={currentPage === 1} className="flex-1 p-3 rounded-xl bg-slate-50 text-slate-700 font-semibold disabled:opacity-50">Prev</button>
+                <div className="text-sm text-slate-700 font-semibold">{currentPage}/{totalPages}</div>
+                <button onClick={goNext} disabled={currentPage === totalPages} className="flex-1 p-3 rounded-xl bg-[#3A643B] text-white font-semibold disabled:opacity-50">Next</button>
               </div>
             </div>
           </div>

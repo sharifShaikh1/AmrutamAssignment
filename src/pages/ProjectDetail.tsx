@@ -5,8 +5,9 @@ const ProjectDetail: React.FC = () => {
   const { id } = useParams()
 
   return (
-    <div className="page project-detail">
-      <section className="section">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 page project-detail">
+        <section className="section">
         <div className="header-row">
           <div>
             <h2>Project #{id}</h2>
@@ -32,7 +33,8 @@ const ProjectDetail: React.FC = () => {
             </ul>
           </div>
         </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }

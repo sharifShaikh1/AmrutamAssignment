@@ -9,7 +9,8 @@ const Invoices: React.FC = () => {
   }))
 
   return (
-    <div className="page invoices">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 page invoices">
       <section className="section header-row">
         <div>
           <h2>Invoices</h2>
@@ -21,7 +22,8 @@ const Invoices: React.FC = () => {
       </section>
 
       <section className="card table-card">
-        <table className="table">
+        <div className="overflow-x-auto">
+          <table className="table min-w-[720px]">
           <thead>
             <tr><th>ID</th><th>Customer</th><th>Amount</th><th>Status</th><th></th></tr>
           </thead>
@@ -36,8 +38,10 @@ const Invoices: React.FC = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </section>
+      </div>
     </div>
   )
 }

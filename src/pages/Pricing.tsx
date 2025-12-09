@@ -2,11 +2,12 @@ import React from 'react'
 
 const Pricing: React.FC = () => {
   return (
-    <div className="page pricing-page">
-      <section className="section">
+    <div className="min-h-screen bg-[#F8F9FA] p-4 sm:p-6 lg:p-8 font-sans text-slate-800">
+      <div className="max-w-6xl mx-auto page pricing-page">
+        <section className="section">
         <h2>Pricing & Plans</h2>
         <p>Clear tiered pricing with a recommended plan highlighted.</p>
-        <div className="pricing-grid">
+        <div className="pricing-grid flex flex-col sm:flex-row gap-4 mt-4">
           <div className="card pricing recommended">
             <h4>Pro</h4>
             <div className="price">$29 / mo</div>
@@ -39,6 +40,7 @@ const Pricing: React.FC = () => {
           </div>
         </div>
       </section>
+      </div>
     </div>
   )
 }

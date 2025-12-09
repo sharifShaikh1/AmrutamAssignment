@@ -19,9 +19,17 @@ export default function CouponsPage() {
   const [defaultCouponsEnabled, setDefaultCouponsEnabled] = useState(true);
   const [cartDiscountEnabled, setCartDiscountEnabled] = useState(true);
   
+  const couponData: { name: string; img: string; product: string; limit: string; percentage: string }[] = [
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt', limit: '1', percentage: '30%' },
+    { name: 'Jack Rock', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt', limit: '10', percentage: '30%' },
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt', limit: '4', percentage: '30%' },
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt', limit: '20', percentage: '30%' },
+    { name: 'Jack Rock', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt', limit: '6', percentage: '30%' },
+  ]
+  
   return (
-    <div className="min-h-screen bg-[#F8F9FA] p-6 lg:p-8 font-sans text-slate-800">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -50,7 +58,7 @@ export default function CouponsPage() {
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div className="bg-white p-4 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <SelectInput 
                 label="Doctor Name" 
@@ -89,7 +97,7 @@ export default function CouponsPage() {
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div className="bg-white p-4 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
               <SelectInput 
                 label="Product Name" 
@@ -148,7 +156,8 @@ export default function CouponsPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          {/* Table for md+ */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="text-slate-800 font-bold border-b border-slate-50">
@@ -160,43 +169,34 @@ export default function CouponsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                <CouponRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                  limit="1"
-                  percentage="30%"
-                />
-                <CouponRow 
-                  name="Jack Rock" 
-                  img="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                  limit="10"
-                  percentage="30%"
-                />
-                <CouponRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                  limit="4"
-                  percentage="30%"
-                />
-                <CouponRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                  limit="20"
-                  percentage="30%"
-                />
-                <CouponRow 
-                  name="Jack Rock" 
-                  img="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                  limit="6"
-                  percentage="30%"
-                />
+                {couponData.map((c, idx) => (
+                  <CouponRow key={idx} name={c.name} img={c.img} product={c.product} limit={c.limit} percentage={c.percentage} />
+                ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile: show stacked cards for readability */}
+          <div className="md:hidden p-4 space-y-3">
+            {couponData.map((c, idx) => (
+              <div key={idx} className="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img src={c.img} alt={c.name} className="w-10 h-10 rounded-full object-cover" />
+                    <div>
+                      <div className="font-bold text-slate-800">{c.name}</div>
+                      <div className="text-xs text-slate-500">{c.product}</div>
+                    </div>
+                  </div>
+                  <div className="text-sm font-semibold text-[#3A643B]">{c.percentage}</div>
+                </div>
+
+                <div className="mt-3 flex items-center justify-between text-sm text-slate-600">
+                  <div>Usage limit: <span className="font-medium text-slate-700">{c.limit}</span></div>
+                  <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-800"><Clapperboard size={18} /></button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Pagination */}

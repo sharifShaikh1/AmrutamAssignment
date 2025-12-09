@@ -8,7 +8,7 @@ import {
   ChevronLeft, 
   ChevronRight as ChevronRightIcon,
   ChevronDown,
-  Clapperboard, // Using for the action icon
+  Clapperboard, 
   Check
 } from 'lucide-react';
 
@@ -19,8 +19,8 @@ export default function SPecialCommisionPage() {
   const [doctorCommissionEnabled, setDoctorCommissionEnabled] = useState(true);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] p-6 lg:p-8 font-sans text-slate-800">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -183,7 +183,7 @@ export default function SPecialCommisionPage() {
 
 const SelectInput = ({ label, placeholder, required }: { label: string, placeholder: string, required?: boolean }) => (
   <div className="relative">
-    {/* Floating Label Effect */}
+  
     <label className="absolute -top-2 left-4 bg-white px-1 text-xs font-bold text-slate-900 z-10">
       {label} {required && <span className="text-red-500">*</span>}
     </label>

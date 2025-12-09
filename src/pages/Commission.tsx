@@ -22,6 +22,15 @@ export default function CommissionPage() {
   // State for view navigation (List vs Add Form)
   const [view, setView] = useState<'list' | 'add'>('list');
 
+  // sample data for special commission rows (used for table and mobile cards)
+  const commissionData: { name: string; img: string; product: string }[] = [
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt' },
+    { name: 'Jack Rock', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt' },
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt' },
+    { name: 'Alina Mathew', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt' },
+    { name: 'Jack Rock', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80', product: 'Nari Sandariya Malt' },
+  ]
+
   // --- VIEW: ADD SPECIAL COMMISSION FORM ---
   if (view === 'add') {
     return (
@@ -88,11 +97,11 @@ export default function CommissionPage() {
 
   // --- VIEW: MAIN COMMISSION LIST ---
   return (
-    <div className="min-h-screen bg-[#F8F9FA] p-6 lg:p-8 font-sans text-slate-800">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 lg:py-8 font-sans text-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-2 text-sm text-slate-500">
             <span>Affiliate</span>
             <ChevronRight size={16} />
@@ -101,7 +110,7 @@ export default function CommissionPage() {
           
           <button 
             onClick={() => setView('add')}
-            className="bg-[#3A643B] hover:bg-[#2d502e] text-white px-6 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm hover:shadow-md"
+            className="bg-[#3A643B] hover:bg-[#2d502e] text-white px-6 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm hover:shadow-md w-full sm:w-auto"
           >
             Add Special Commission
           </button>
@@ -121,14 +130,14 @@ export default function CommissionPage() {
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div className="bg-white p-4 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <SelectInput label="Product" placeholder="Applies to all the products" />
               <SelectInput label="Percentage" placeholder="Please select a Percentage" required />
             </div>
 
-            <div className="flex justify-end">
-              <button className="bg-[#3A643B] text-white px-12 py-3 rounded-xl font-bold text-sm hover:bg-[#2d502e] transition-all shadow-sm hover:shadow">
+              <div className="flex justify-end">
+              <button className="bg-[#3A643B] text-white px-6 sm:px-12 py-3 rounded-xl font-bold text-sm hover:bg-[#2d502e] transition-all shadow-sm hover:shadow">
                 Update
               </button>
             </div>
@@ -147,14 +156,14 @@ export default function CommissionPage() {
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div className="bg-white p-4 sm:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <SelectInput label="Doctor" placeholder="Applies to all the Doctors" />
               <SelectInput label="Percentage" placeholder="Please select a Percentage" required />
             </div>
 
             <div className="flex justify-end">
-              <button className="bg-[#3A643B] text-white px-12 py-3 rounded-xl font-bold text-sm hover:bg-[#2d502e] transition-all shadow-sm hover:shadow">
+              <button className="bg-[#3A643B] text-white px-6 sm:px-12 py-3 rounded-xl font-bold text-sm hover:bg-[#2d502e] transition-all shadow-sm hover:shadow">
                 Update
               </button>
             </div>
@@ -188,7 +197,8 @@ export default function CommissionPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          {/* table for md+ screens, cards for mobile */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="text-slate-800 font-bold border-b border-slate-50">
@@ -200,33 +210,35 @@ export default function CommissionPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                <CommissionRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                />
-                <CommissionRow 
-                  name="Jack Rock" 
-                  img="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                />
-                <CommissionRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                />
-                <CommissionRow 
-                  name="Alina Mathew" 
-                  img="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                />
-                <CommissionRow 
-                  name="Jack Rock" 
-                  img="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  product="Nari Sandariya Malt"
-                />
+                {commissionData.map((d, idx) => (
+                  <CommissionRow key={idx} name={d.name} img={d.img} product={d.product} />
+                ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden p-4 space-y-3">
+            {commissionData.map((d, idx) => (
+              <div key={idx} className="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <img src={d.img} alt={d.name} className="w-10 h-10 rounded-full object-cover" />
+                    <div>
+                      <div className="font-bold text-slate-800">{d.name}</div>
+                      <div className="text-xs text-slate-500">{d.product}</div>
+                    </div>
+                  </div>
+                  <div className="text-sm font-semibold text-[#3A643B]">30%</div>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="text-sm text-slate-500">Product's Commission: <span className="font-medium text-slate-700">30%</span></div>
+                  <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-800">
+                    <Clapperboard size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Pagination */}

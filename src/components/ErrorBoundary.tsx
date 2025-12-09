@@ -18,17 +18,13 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 
   static getDerivedStateFromError(error: Error) {
-    // Update state so the next render shows the fallback UI.
     return { hasError: true, error }
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // You can log the error to an error reporting service here.
-    // For now we'll put it into state so the UI can display it.
-    // eslint-disable-next-line react/no-did-update-set-state
+   
     this.setState({ error, errorInfo })
-    // TODO: add integration with Sentry / logging backend if desired
-    // console.error('Uncaught error:', error, errorInfo)
+    
   }
 
   reset = () => {

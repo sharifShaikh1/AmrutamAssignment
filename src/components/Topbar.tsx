@@ -1,19 +1,22 @@
 import React from 'react'
 import { Menu, Search, Bell, MessageSquare, Settings } from 'lucide-react'
+import logo from '../asset/logo.png';
+import admin from '../asset/Admin.png';
 
 interface TopbarProps {
   onMenuClick?: () => void;
+  isSidebarOpen?: boolean;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
+const Topbar: React.FC<TopbarProps> = ({ onMenuClick, isSidebarOpen }) => {
   return (
-    <div className="w-full">
+    <div className={`fixed top-0 right-0 z-50 transition-all w-full`}>
       <div className="flex items-center justify-between bg-white h-20 shadow-sm px-6">
         <div className="flex items-center gap-3">
           <button onClick={onMenuClick} className="p-2 rounded-full hover:bg-slate-100 text-[#3A643B]"><Menu size={22} /></button>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
-              <img src="https://i.postimg.cc/5ymj0w7N/logo.png" alt="AMRUTAM" className="w-8 h-8" />
+              <img src={logo} alt="AMRUTAM" className="w-8 h-8" />
             </div>
             <div className="font-bold tracking-widest">AMRUTAM</div>
           </div>
@@ -36,11 +39,11 @@ const Topbar: React.FC<TopbarProps> = ({ onMenuClick }) => {
           </button>
 
           <div className="flex items-center gap-3 pl-2">
-            <div className="text-right hidden md:block">
+            <div className={`text-right hidden md:block ${isSidebarOpen ? 'opacity-80' : ''}`}>
               <div className="text-sm font-bold text-slate-800">Liam Michael</div>
               <div className="text-xs text-slate-500">Admin</div>
             </div>
-            <img src="https://i.pravatar.cc/40" alt="avatar" className="w-10 h-10 rounded-xl object-cover shadow-sm" />
+            <img src={admin} alt="avatar" className="w-10 h-10 rounded-xl object-cover shadow-sm" />
           </div>
 
           <button className="text-slate-400 hover:text-[#3A643B]"><Settings size={20} /></button>

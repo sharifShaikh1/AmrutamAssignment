@@ -43,6 +43,7 @@ Open http://localhost:5173 — the app loads the Affiliate dashboard by default.
 	- Component-first design: shared components in `src/components/` (Sidebar, Topbar, FaqLimitModal, AddFaq, ErrorBoundary).
 	- Inline Add FAQ as requested — no route change; Add form resets on close and is isolated per origin.
 	- Per-origin state for Web vs App FAQ to ensure form inputs, selections and pagination do not bleed across origins.
+	- Mobile responsiveness: sidebar now behaves as an overlay on small screens with a backdrop and close button; layout stacks on narrow viewports, tables use overflow-x-auto and cards/ grids collapse responsively.
 	- FAQ homepage enforcement: MAX_FAQS (5) and a modal flow to replace items instead of exceeding the cap.
 	- ErrorBoundary added to catch runtime render errors and show a resettable fallback (dev-friendly).
 
